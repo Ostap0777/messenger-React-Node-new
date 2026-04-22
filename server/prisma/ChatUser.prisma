@@ -1,0 +1,13 @@
+model ChatUser {
+  id       String @id @default(cuid())
+  userId   String
+  chatId   String
+  role     String @default("member")
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatId])
+  @@index([chatId])
+}
