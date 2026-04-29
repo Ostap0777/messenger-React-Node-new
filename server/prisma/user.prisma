@@ -3,7 +3,8 @@ model User {
   name      String
   email     String? @unique
   phone     String? @unique
-  userTag   String @unique
+  password  String
+  userTag   String? @unique
   avatar    String?
   isOnline  Boolean @default(false)
   createdAt DateTime @default(now())
