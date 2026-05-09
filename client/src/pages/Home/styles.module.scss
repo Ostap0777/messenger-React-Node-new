@@ -1,0 +1,8 @@
+.homeContainer {
+  height: 80px;
+}
+.logOutButton {
+  &:hover {
+    cursor: pointer;
+  }
+}
