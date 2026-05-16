@@ -1,15 +1,17 @@
 model User {
-  id        String @id @default(cuid())
-  name      String
-  email     String? @unique
-  phone     String? @unique
-  password  String
-  userTag   String? @unique
-  avatar    String?
-  isOnline  Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String @id @default(cuid())
+  name        String
+  email       String? @unique
+  phone       String? @unique
+  password    String
+  userTag     String? @unique
+  avatar      String?
+  isOnline    Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  messages  Message[]
-  chats     ChatUser[]
+  messages    Message[]
+  chats       ChatUser[]
+  contacts    Contact[] @relation("ContactOwner")
+  contactedBy Contact[] @relation("ContactTarget")
 }

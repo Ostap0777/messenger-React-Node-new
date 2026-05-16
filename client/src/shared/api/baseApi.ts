@@ -5,6 +5,15 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000",
     credentials: "include",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("accessToken");
+
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+
+      return headers;
+    },
   }),
   tagTypes: ["User", "Chat", "Message"],
   endpoints: () => ({}),
