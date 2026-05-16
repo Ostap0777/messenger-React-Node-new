@@ -1,0 +1,13 @@
+model Contact {
+  id            String   @id @default(cuid())
+  ownerId       String
+  contactUserId String
+  customName    String?
+  createdAt     DateTime @default(now())
+
+  owner       User @relation("ContactOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  contactUser User @relation("ContactTarget", fields: [contactUserId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, contactUserId])
+  @@index([ownerId])
+}
