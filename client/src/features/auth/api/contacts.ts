@@ -11,19 +11,41 @@ export interface ContactUser {
 export interface Contact {
   id: string;
   ownerId: string;
+  email: string;
+  phone: string;
   contactUserId: string;
   customName: string | null;
   createdAt: string;
   contactUser: ContactUser;
 }
-export const constactsApi = baseApi.injectEndpoints({
+
+export interface CreateContactDto {
+  email: string;
+  phone: string;
+  customName?: string;
+}
+export const contactsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getContacts: builder.query<Contact[], void>({
+    // userId лише для ключа кешу RTK — на сервер не відправляється
+    getContacts: builder.query<Contact[], string>({
       query: () => ({
         url: "/contacts",
         method: "GET",
       }),
     }),
+
+    createContact: builder.mutation<
+      Contact,
+      CreateContactDto,
+      Partial<Contact>
+    >({
+      query: (body) => ({
+        url: "/contacts",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
-export const { useGetContactsQuery } = constactsApi;
+
+export const { useGetContactsQuery, useCreateContactMutation } = contactsApi;

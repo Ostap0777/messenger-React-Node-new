@@ -1,12 +1,22 @@
 .homeContainer {
-  height: 80px;
+  display: flex;
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
 }
 .logOutButton {
   &:hover {
     cursor: pointer;
   }
-  .contactsBlock {
-    background-color: black;
-    height: 50px;
-  }
+}
+.contactsBlock {
+  background-color: black;
+  height: 50px;
+}
+.sidebarContent {
+  flex: 0 1 20%;
+}
+.mainContent {
+  flex: 0 80%;
+  background-color: rgb(160, 160, 160);
 }
