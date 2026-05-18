@@ -4,6 +4,8 @@ import Input from "../../shared/ui/Input";
 import styles from "./styles.module.scss";
 import { useLoginMutation } from "../../features/auth/api/loginApi";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../router/router";
+import { setAccessToken } from "../../features/auth/lib/session";
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -21,16 +23,14 @@ function LoginPage() {
         password,
       }).unwrap();
       console.log(response);
-      localStorage.setItem("accessToken", response.accessToken);
+      setAccessToken(response.accessToken);
       navigate("/");
     } catch (error) {
       console.error(error);
     }
   };
-  const handleOpenAuth = async (e: React.FormEvent) => {
-    console.log("register");
-    e.preventDefault();
-    navigate("/register");
+  const handleOpenAuth = () => {
+    navigate(ROUTES.REGISTER);
   };
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;

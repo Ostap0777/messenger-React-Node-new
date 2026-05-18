@@ -1,44 +1,34 @@
 import styles from "./styles.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useGetContactsQuery } from "../../features/auth/api/contacts";
-
-export interface ContactUser {
-  id: string;
-  name: string;
-  email: string | null;
-  userTag: string | null;
-  avatar: string | null;
-}
-
-export interface Contact {
-  id: string;
-  ownerId: string;
-  contactUserId: string;
-  customName: string | null;
-  createdAt: string;
-  contactUser: ContactUser;
-}
+import ContactsSideBar from "../../shared/ui/Sidebar/ContactsSideBar";
+import {
+  clearAccessToken,
+  getUserIdFromToken,
+} from "../../features/auth/lib/session";
 
 function Home() {
-  //   const [contacts, setContacts] = useState<Contact[]>([]);
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    localStorage.removeItem("accessToken");
-    console.log("click");
+  const userId = getUserIdFromToken();
+
+  const handleLogout = () => {
+    clearAccessToken();
     navigate("/login");
   };
 
-  const { data: contacts = [] } = useGetContactsQuery();
+  const { data: contacts = [] } = useGetContactsQuery(userId ?? "", {
+    skip: !userId,
+  });
   return (
     <div className={styles.homeContainer}>
-      <p>Home</p>
-      <p className={styles.logOutButton} onClick={handleLogout}>
-        Logout
-      </p>
-      <div className={styles.contactsBlock}>
-        {contacts.map((c) => (
-          <p key={c.id}>{c.contactUser.name}</p>
-        ))}
+      <div className={styles.sidebarContent}>
+        <ContactsSideBar contacts={contacts} />
+      </div>
+      <div className={styles.mainContent}>
+        <p>Home</p>
+        <p className={styles.logOutButton} onClick={handleLogout}>
+          Logout
+        </p>
       </div>
     </div>
   );
