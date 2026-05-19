@@ -3,6 +3,7 @@ import styles from "./style.module.scss";
 import Modal from "../Modal";
 import type { Contact } from "../../../features/auth/api/contacts";
 import { getContactDisplayName } from "../../../features/auth/lib/getContactDisplayName";
+import UpdateModal from "../UpdateModal";
 
 interface ContactsSideBarProps {
   contacts: Contact[];
@@ -10,14 +11,22 @@ interface ContactsSideBarProps {
 
 function ContactsSideBar({ contacts }: ContactsSideBarProps) {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
-  const handleModalOpen = () => {
+  const [updateModalOpened, setUpdateModalOpened] = useState<boolean>(false);
+  const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
+  const handleCreateModalOpen = () => {
     setModalOpened(true);
+  };
+
+  const handleUpdateModalOpen = (contact: Contact) => {
+    setContactToEdit(contact);
+    console.log("click");
+    setUpdateModalOpened(true);
   };
   return (
     <div>
       <div className={styles.topContent}>
         <p>Contacts</p>
-        <button onClick={handleModalOpen}>Add Contact</button>
+        <button onClick={handleCreateModalOpen}>Add Contact</button>
       </div>
       <div className={styles.mainContent}>
         {contacts.length === 0 ? (
@@ -27,14 +36,22 @@ function ContactsSideBar({ contacts }: ContactsSideBarProps) {
             {contacts.map((contact) => (
               <li key={contact.id} className={styles.contactItem}>
                 {getContactDisplayName(contact)}
+                <button
+                  type="button"
+                  onClick={() => handleUpdateModalOpen(contact)}
+                >
+                  Update
+                </button>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <Modal
-        isOpen={modalOpened}
-        onClose={() => setModalOpened(false)}
+      <Modal isOpen={modalOpened} onClose={() => setModalOpened(false)} />
+      <UpdateModal
+        contact={contactToEdit}
+        isOpen={updateModalOpened}
+        onClose={() => setUpdateModalOpened(false)}
       />
     </div>
   );
