@@ -24,6 +24,10 @@ export interface CreateContactDto {
   phone: string;
   customName?: string;
 }
+export interface UpdateContactBody {
+  customName?: string;
+  id?: string;
+}
 export const contactsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // userId лише для ключа кешу RTK — на сервер не відправляється
@@ -45,7 +49,22 @@ export const contactsApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    updateContact: builder.mutation<
+      Contact,
+      UpdateContactBody,
+      Partial<Contact>
+    >({
+      query: ({ id, customName }) => ({
+        url: `/contacts/${id}`,
+        method: "PUT",
+        body: { customName },
+      }),
+    }),
   }),
 });
 
-export const { useGetContactsQuery, useCreateContactMutation } = contactsApi;
+export const {
+  useGetContactsQuery,
+  useCreateContactMutation,
+  useUpdateContactMutation,
+} = contactsApi;

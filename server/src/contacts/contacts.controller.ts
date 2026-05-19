@@ -1,12 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
   Post,
-  Body,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
+import { UpdateContactDto } from './dto/update-contact.dto';
 import type { AuthUser } from 'src/auth/decorators/current-user.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -24,5 +27,14 @@ export class ContactsController {
   @Get()
   findAll(@CurrentUser() user: AuthUser) {
     return this.contactsService.findAll(user.id);
+  }
+
+  @Put(':id')
+  update(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateContactDto,
+  ) {
+    return this.contactsService.update(user.id, id, dto);
   }
 }
