@@ -36,6 +36,13 @@ export const contactsApi = baseApi.injectEndpoints({
         url: "/contacts",
         method: "GET",
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Contact" as const, id })),
+              { type: "Contact", id: "LIST" },
+            ]
+          : [{ type: "Contact", id: "LIST" }],
     }),
 
     createContact: builder.mutation<
@@ -48,6 +55,13 @@ export const contactsApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: (result) =>
+        result
+          ? [
+              { type: "Contact", id: result.id },
+              { type: "Contact", id: "LIST" },
+            ]
+          : [{ type: "Contact", id: "LIST" }],
     }),
     updateContact: builder.mutation<
       Contact,
@@ -59,6 +73,20 @@ export const contactsApi = baseApi.injectEndpoints({
         method: "PUT",
         body: { customName },
       }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Contact", id },
+        { type: "Contact", id: "LIST" },
+      ],
+    }),
+    deleteContact: builder.mutation<Contact, string>({
+      query: (id) => ({
+        url: `/contacts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: "Contact", id },
+        { type: "Contact", id: "LIST" },
+      ],
     }),
   }),
 });
@@ -67,4 +95,5 @@ export const {
   useGetContactsQuery,
   useCreateContactMutation,
   useUpdateContactMutation,
+  useDeleteContactMutation,
 } = contactsApi;

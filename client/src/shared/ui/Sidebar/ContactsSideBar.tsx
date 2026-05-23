@@ -1,7 +1,10 @@
 import { useState } from "react";
 import styles from "./style.module.scss";
 import Modal from "../Modal";
-import type { Contact } from "../../../features/auth/api/contacts";
+import {
+  useDeleteContactMutation,
+  type Contact,
+} from "../../../features/auth/api/contacts";
 import { getContactDisplayName } from "../../../features/auth/lib/getContactDisplayName";
 import UpdateModal from "../UpdateModal";
 
@@ -13,6 +16,7 @@ function ContactsSideBar({ contacts }: ContactsSideBarProps) {
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [updateModalOpened, setUpdateModalOpened] = useState<boolean>(false);
   const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
+  const [deleteContact] = useDeleteContactMutation();
   const handleCreateModalOpen = () => {
     setModalOpened(true);
   };
@@ -21,6 +25,15 @@ function ContactsSideBar({ contacts }: ContactsSideBarProps) {
     setContactToEdit(contact);
     console.log("click");
     setUpdateModalOpened(true);
+  };
+
+  const handleDeleteContact = async (id: string) => {
+    console.log(id);
+    try {
+      await deleteContact(id).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <div>
@@ -36,6 +49,9 @@ function ContactsSideBar({ contacts }: ContactsSideBarProps) {
             {contacts.map((contact) => (
               <li key={contact.id} className={styles.contactItem}>
                 {getContactDisplayName(contact)}
+                <button onClick={() => handleDeleteContact(contact.id)}>
+                  Delete
+                </button>
                 <button
                   type="button"
                   onClick={() => handleUpdateModalOpen(contact)}
