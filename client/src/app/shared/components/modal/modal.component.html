@@ -1,0 +1,35 @@
+<div class="modal-overlay" (click)="onClose()"></div>
+
+<div
+  class="modal-container"
+  [style.maxWidth]="maxWidth"
+  [style.minWidth]="minWidth"
+>
+  <header class="modal-header">
+    <h3 class="modal-title">{{ title }}</h3>
+    <button
+      type="button"
+      class="close-btn"
+      [disabled]="disabled"
+      (click)="onClose()"
+      aria-label="Close"
+    >
+      &times;
+    </button>
+  </header>
+
+  <main class="modal-body">
+    <ng-content></ng-content>
+  </main>
+
+  <footer class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="disabled"
+      (click)="onDone()"
+    >
+      {{ buttonText }}
+    </button>
+  </footer>
+</div>
