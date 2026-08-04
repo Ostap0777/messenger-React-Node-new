@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -36,5 +37,10 @@ export class ContactsController {
     @Body() dto: UpdateContactDto,
   ) {
     return this.contactsService.update(user.id, id, dto);
+  }
+
+  @Delete(':id')
+  delete(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.contactsService.remove(user.id, id);
   }
 }
